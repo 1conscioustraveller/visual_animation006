@@ -530,9 +530,15 @@
             // Draw vortex particles
             for (let i = 0; i < vortexParticles.length; i++) {
                 const p = vortexParticles[i];
+
+                // Changed this line:
+                // p.angle += p.speed * complexity * 0.1 * speed;
+                // To:
                 
-                // Update particle position
-                p.angle += p.speed * complexity * 0.1;
+                p.angle += p.speed * speed * (0.1 + complexity * 0.02);  // Speed affects movement rate, complexity affects pattern
+                
+                // This updates particle position
+                
                 p.radius += Math.sin(time * 0.5 + i) * 0.5 * sizeFactor;
                 
                 // Keep radius within bounds, scaled by size
