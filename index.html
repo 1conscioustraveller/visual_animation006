@@ -663,11 +663,11 @@
             
             if (patternType === 'energy') {
                 // Energy Vortex pattern
-                drawEnergyVortex(time, centerX, centerY, size, complexity, brightness, color1, color2);
+                drawEnergyVortex(time, centerX, centerY, size, complexity * speed, brightness, color1, color2);
             }
             else if (patternType === 'crystals') {
                 // Digital Crystals pattern
-                drawDigitalCrystals(time, centerX, centerY, size, complexity, brightness, color1, color2);
+                drawDigitalCrystals(time, centerX, centerY, size, complexity * speed, brightness, color1, color2);
             }
             
             requestAnimationFrame(draw);
