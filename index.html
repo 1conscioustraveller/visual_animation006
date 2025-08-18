@@ -524,21 +524,24 @@
             ctx.save();
             ctx.translate(centerX, centerY);
             
+            // Scale particle sizes and positions based on the size parameter
+            const sizeFactor = size / 30; // 30 is the default size
+            
             // Draw vortex particles
             for (let i = 0; i < vortexParticles.length; i++) {
                 const p = vortexParticles[i];
                 
                 // Update particle position
                 p.angle += p.speed * complexity * 0.1;
-                p.radius += Math.sin(time * 0.5 + i) * 0.5;
+                p.radius += Math.sin(time * 0.5 + i) * 0.5 * sizeFactor;
                 
-                // Keep radius within bounds
+                // Keep radius within bounds, scaled by size
                 if (p.radius < 0) p.radius = 0;
                 if (p.radius > size * 5) p.radius = size * 5;
                 
                 // Calculate position
-                const x = Math.cos(p.angle) * p.radius;
-                const y = Math.sin(p.angle) * p.radius;
+                const x = Math.cos(p.angle) * p.radius * sizeFactor;
+                const y = Math.sin(p.angle) * p.radius * sizeFactor;
                 
                 // Color and alpha
                 const colorFactor = (Math.sin(time * 0.3 + p.colorOffset) + 1) / 2;
@@ -549,7 +552,7 @@
                 ctx.fillStyle += `, ${alpha})`.replace('rgb', 'rgba');
                 
                 ctx.beginPath();
-                ctx.arc(x, y, p.size, 0, Math.PI * 2);
+                ctx.arc(x, y, p.size * sizeFactor, 0, Math.PI * 2);
                 ctx.fill();
                 
                 // Draw connection lines to center
