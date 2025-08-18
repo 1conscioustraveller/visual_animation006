@@ -3,7 +3,7 @@
 <body>
     <div class="animation-container">
         <canvas id="psychedelicCanvas"></canvas>
-        <h1>🌈 ULTIMATE PSYCHEDELIC GENERATOR 🌈</h1>
+        <h1>🌈 PSYCHEDELIC GENERATOR 🌈</h1>
         <div class="download-container">
             <button id="downloadBtn">🎥 Download Video (7s)</button>
             <div id="countdown">Preparing video... 7</div>
@@ -25,14 +25,8 @@
         <div class="control-group">
             <label for="patternType">🌀 Pattern Type</label>
             <select id="patternType">
-                <option value="circles">Pulsing Circles</option>
-                <option value="waves">Radiating Waves</option>
-                <option value="spiral">Hypnotic Spiral</option>
-                <option value="grid">Warping Grid</option>
-                <option value="fractal">Fractal Dream</option>
                 <option value="energy">Energy Vortex</option>
                 <option value="crystals">Digital Crystals</option>
-                <option value="ribbons">Color Ribbons</option>
             </select>
         </div>
         
@@ -74,7 +68,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🌈 Ultimate Psychedelic Video Generator 🌈</title>
+    <title>🌈 Psychedelic Generator 🌈</title>
     <style>
         :root {
             --color1: #ff00ff;
@@ -394,7 +388,7 @@
         resetBtn.addEventListener('click', () => {
             color1Input.value = '#ff00ff';
             color2Input.value = '#00ffff';
-            document.getElementById('patternType').value = 'circles';
+            document.getElementById('patternType').value = 'energy';
             document.getElementById('speed').value = '1';
             document.getElementById('colorSpeed').value = '1';
             document.getElementById('complexity').value = '8';
@@ -417,8 +411,6 @@
         const vortexParticles = [];
         // Digital Crystals
         const crystals = [];
-        // Color Ribbons
-        const ribbons = [];
         
         // Initialize effects
         function initEffects() {
@@ -447,28 +439,6 @@
                     points: 3 + Math.floor(Math.random() * 5), // 3-7 points
                     colorOffset: Math.random()
                 });
-            }
-            
-            // Initialize Color Ribbons
-            ribbons.length = 0;
-            const ribbonCount = 8;
-            for (let i = 0; i < ribbonCount; i++) {
-                ribbons.push({
-                    points: [],
-                    colorOffset: i / ribbonCount,
-                    width: 10 + Math.random() * 20
-                });
-                
-                // Initialize points for each ribbon
-                const pointCount = 20;
-                for (let j = 0; j < pointCount; j++) {
-                    ribbons[i].points.push({
-                        x: Math.random() * canvas.width,
-                        y: Math.random() * canvas.height,
-                        vx: (Math.random() - 0.5) * 2,
-                        vy: (Math.random() - 0.5) * 2
-                    });
-                }
             }
         }
         
@@ -505,42 +475,6 @@
             const b = Math.round(rgb1.b + factor * (rgb2.b - rgb1.b));
             
             return `rgb(${r}, ${g}, ${b})`;
-        }
-        
-        // Draw fractal pattern
-        function drawFractal(time, centerX, centerY, size, complexity, brightness, color1, color2) {
-            const maxDepth = Math.max(3, Math.floor(complexity / 2));
-            const branchAngle = (Math.PI * 2) / 6;
-            
-            function drawBranch(x, y, angle, depth, length) {
-                if (depth > maxDepth) return;
-                
-                const endX = x + Math.cos(angle) * length;
-                const endY = y + Math.sin(angle) * length;
-                
-                const colorFactor = (depth / maxDepth) * 0.8 + Math.sin(time * 0.5 + depth) * 0.2;
-                const alpha = brightness * (0.7 + 0.3 * Math.sin(time * 0.3 + depth));
-                
-                ctx.strokeStyle = interpolateColor(color1, color2, colorFactor);
-                ctx.strokeStyle += `, ${alpha})`.replace('rgb', 'rgba');
-                ctx.lineWidth = (maxDepth - depth + 1) * 1.5;
-                
-                ctx.beginPath();
-                ctx.moveTo(x, y);
-                ctx.lineTo(endX, endY);
-                ctx.stroke();
-                
-                const newLength = length * 0.7;
-                const angleVariation = Math.sin(time * 0.2 + depth) * 0.5;
-                
-                drawBranch(endX, endY, angle - branchAngle + angleVariation, depth + 1, newLength);
-                drawBranch(endX, endY, angle + branchAngle - angleVariation, depth + 1, newLength);
-            }
-            
-            for (let i = 0; i < 6; i++) {
-                const angle = (i / 6) * Math.PI * 2 + time * 0.1;
-                drawBranch(centerX, centerY, angle, 0, size * 2);
-            }
         }
         
         // Draw Energy Vortex
@@ -668,78 +602,6 @@
             }
         }
         
-        // Draw Color Ribbons
-        function drawColorRibbons(time, centerX, centerY, size, complexity, brightness, color1, color2) {
-            for (let i = 0; i < ribbons.length; i++) {
-                const ribbon = ribbons[i];
-                
-                // Update ribbon points
-                for (let j = 0; j < ribbon.points.length; j++) {
-                    const point = ribbon.points[j];
-                    
-                    // Move points
-                    point.x += point.vx * complexity * 0.05;
-                    point.y += point.vy * complexity * 0.05;
-                    
-                    // Bounce off edges
-                    if (point.x < 0 || point.x > canvas.width) point.vx *= -1;
-                    if (point.y < 0 || point.y > canvas.height) point.vy *= -1;
-                    
-                    // Add some randomness
-                    point.vx += (Math.random() - 0.5) * 0.1;
-                    point.vy += (Math.random() - 0.5) * 0.1;
-                    
-                    // Normalize speed
-                    const speed = Math.sqrt(point.vx * point.vx + point.vy * point.vy);
-                    if (speed > 2) {
-                        point.vx = (point.vx / speed) * 2;
-                        point.vy = (point.vy / speed) * 2;
-                    }
-                }
-                
-                // Draw ribbon
-                ctx.beginPath();
-                for (let j = 0; j < ribbon.points.length; j++) {
-                    const point = ribbon.points[j];
-                    
-                    if (j === 0) {
-                        ctx.moveTo(point.x, point.y);
-                    } else {
-                        // Smooth curve through points
-                        const prevPoint = ribbon.points[j - 1];
-                        const cpX = (prevPoint.x + point.x) / 2;
-                        const cpY = (prevPoint.y + point.y) / 2;
-                        ctx.quadraticCurveTo(prevPoint.x, prevPoint.y, cpX, cpY);
-                    }
-                }
-                
-                // Color and alpha
-                const colorFactor = (Math.sin(time * 0.1 + ribbon.colorOffset) + 1) / 2;
-                const alpha = brightness * (0.7 + 0.3 * Math.sin(time * 0.3 + i));
-                
-                // Create gradient along ribbon
-                const gradient = ctx.createLinearGradient(
-                    ribbon.points[0].x, ribbon.points[0].y,
-                    ribbon.points[ribbon.points.length - 1].x, ribbon.points[ribbon.points.length - 1].y
-                );
-                gradient.addColorStop(0, interpolateColor(color1, color2, colorFactor));
-                gradient.addColorStop(1, interpolateColor(color2, color1, colorFactor));
-                
-                ctx.strokeStyle = gradient;
-                ctx.strokeStyle += `, ${alpha})`.replace('rgb', 'rgba');
-                ctx.lineWidth = ribbon.width;
-                ctx.lineCap = 'round';
-                ctx.lineJoin = 'round';
-                ctx.stroke();
-                
-                // Add glow effect
-                ctx.shadowBlur = ribbon.width * 0.8;
-                ctx.shadowColor = interpolateColor(color1, color2, colorFactor);
-                ctx.stroke();
-                ctx.shadowBlur = 0;
-            }
-        }
-        
         // Draw psychedelic pattern
         function draw() {
             const { color1, color2, patternType, speed, colorSpeed, complexity, size, brightness } = getControls();
@@ -753,143 +615,14 @@
             
             const centerX = canvas.width / 2;
             const centerY = canvas.height / 2;
-            const maxDist = Math.sqrt(centerX * centerX + centerY * centerY);
             
-            if (patternType === 'circles') {
-                // Pulsing circles pattern
-                for (let i = 0; i < complexity * 8; i++) {
-                    const radius = size * 5 + Math.sin(time * 0.7 + i * 0.2) * size * 4;
-                    const alpha = brightness * (0.5 + 0.5 * Math.sin(time * 0.5 + i * 0.2));
-                    const colorFactor = (Math.sin(time * 0.3 + i * 0.5) + 1) / 2;
-                    
-                    ctx.strokeStyle = interpolateColor(color1, color2, colorFactor);
-                    ctx.strokeStyle += `, ${alpha})`.replace('rgb', 'rgba');
-                    ctx.lineWidth = 2 + Math.sin(time * 0.3 + i) * 1.5;
-                    
-                    ctx.beginPath();
-                    ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
-                    ctx.stroke();
-                    
-                    // Inner glow effect
-                    if (i % 3 === 0) {
-                        ctx.shadowBlur = 20;
-                        ctx.shadowColor = interpolateColor(color1, color2, colorFactor);
-                        ctx.stroke();
-                        ctx.shadowBlur = 0;
-                    }
-                }
-            } 
-            else if (patternType === 'waves') {
-                // Radiating waves pattern
-                for (let i = 0; i < complexity * 30; i++) {
-                    const angle = (i / (complexity * 30)) * Math.PI * 2;
-                    const distance = (size * 2) + Math.sin(time * 2 + i * 0.1) * size * 1.5;
-                    const x = centerX + Math.cos(angle) * distance;
-                    const y = centerY + Math.sin(angle) * distance;
-                    const radius = size * 0.5 + Math.sin(time + i * 0.2) * size * 0.3;
-                    const alpha = brightness * (0.7 + 0.3 * Math.sin(time * 0.7 + i * 0.1));
-                    const colorFactor = (i % 20) / 20;
-                    
-                    ctx.fillStyle = interpolateColor(color1, color2, colorFactor);
-                    ctx.fillStyle += `, ${alpha})`.replace('rgb', 'rgba');
-                    
-                    ctx.beginPath();
-                    ctx.arc(x, y, radius, 0, Math.PI * 2);
-                    ctx.fill();
-                    
-                    // Connecting lines
-                    if (i > 0 && i % 5 === 0) {
-                        ctx.strokeStyle = interpolateColor(color1, color2, colorFactor);
-                        ctx.strokeStyle += `, ${alpha * 0.7})`.replace('rgb', 'rgba');
-                        ctx.lineWidth = 1;
-                        ctx.beginPath();
-                        ctx.moveTo(x, y);
-                        ctx.lineTo(centerX, centerY);
-                        ctx.stroke();
-                    }
-                }
-            } 
-            else if (patternType === 'spiral') {
-                // Hypnotic spiral pattern
-                const spiralTurns = complexity;
-                const points = 300;
-                ctx.lineWidth = size * 0.3;
-                
-                for (let j = 0; j < 5; j++) {
-                    ctx.beginPath();
-                    for (let i = 0; i < points; i++) {
-                        const progress = i / points;
-                        const angle = progress * Math.PI * 2 * spiralTurns + time * (j + 1) * 0.5;
-                        const radius = progress * (canvas.width / 2 - size);
-                        const x = centerX + Math.cos(angle) * radius;
-                        const y = centerY + Math.sin(angle) * radius;
-                        
-                        if (i === 0) {
-                            ctx.moveTo(x, y);
-                        } else {
-                            ctx.lineTo(x, y);
-                        }
-                    }
-                    const alpha = brightness * (0.7 + 0.3 * Math.sin(time * 0.5 + j));
-                    const colorFactor = j / 5;
-                    
-                    ctx.strokeStyle = interpolateColor(color1, color2, colorFactor);
-                    ctx.strokeStyle += `, ${alpha})`.replace('rgb', 'rgba');
-                    
-                    // Add glow to spiral
-                    ctx.shadowBlur = 15;
-                    ctx.shadowColor = interpolateColor(color1, color2, colorFactor);
-                    ctx.stroke();
-                    ctx.shadowBlur = 0;
-                }
-            } 
-            else if (patternType === 'grid') {
-                // Warping grid pattern
-                const cellSize = size * 2;
-                const cols = Math.ceil(canvas.width / cellSize) + 1;
-                const rows = Math.ceil(canvas.height / cellSize) + 1;
-                
-                for (let i = 0; i < cols; i++) {
-                    for (let j = 0; j < rows; j++) {
-                        const x = i * cellSize + Math.sin(time * 0.5 + j * 0.2) * size;
-                        const y = j * cellSize + Math.cos(time * 0.5 + i * 0.2) * size;
-                        const s = size * 0.3 + Math.sin(time * 0.3 + i + j) * size * 0.2;
-                        const alpha = brightness * (0.5 + 0.5 * Math.sin(time * 0.3 + i + j));
-                        const colorFactor = (Math.sin(time * 0.2 + i * 0.1 + j * 0.1) + 1) / 2;
-                        
-                        ctx.fillStyle = interpolateColor(color1, color2, colorFactor);
-                        ctx.fillStyle += `, ${alpha})`.replace('rgb', 'rgba');
-                        ctx.fillRect(x, y, s, s);
-                        
-                        // Connect points with lines
-                        if (i > 0 && j > 0) {
-                            ctx.strokeStyle = interpolateColor(color1, color2, colorFactor);
-                            ctx.strokeStyle += `, ${alpha * 0.5})`.replace('rgb', 'rgba');
-                            ctx.lineWidth = 1;
-                            ctx.beginPath();
-                            ctx.moveTo(x, y);
-                            ctx.lineTo(x - cellSize, y);
-                            ctx.lineTo(x - cellSize, y - cellSize);
-                            ctx.stroke();
-                        }
-                    }
-                }
-            } 
-            else if (patternType === 'fractal') {
-                // Fractal dream pattern
-                drawFractal(time, centerX, centerY, size, complexity, brightness, color1, color2);
-            } 
-            else if (patternType === 'energy') {
+            if (patternType === 'energy') {
                 // Energy Vortex pattern
                 drawEnergyVortex(time, centerX, centerY, size, complexity, brightness, color1, color2);
             }
             else if (patternType === 'crystals') {
                 // Digital Crystals pattern
                 drawDigitalCrystals(time, centerX, centerY, size, complexity, brightness, color1, color2);
-            }
-            else if (patternType === 'ribbons') {
-                // Color Ribbons pattern
-                drawColorRibbons(time, centerX, centerY, size, complexity, brightness, color1, color2);
             }
             
             requestAnimationFrame(draw);
