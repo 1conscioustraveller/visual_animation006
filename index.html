@@ -134,27 +134,6 @@
             width: var(--animation-width);
             height: calc(var(--animation-width) * 0.6);
             max-height: 70vh;
-            /* Pulsating glow effect */
-            animation: pulseGlow 3s ease-in-out infinite;
-        }
-        
-        /* New pulsating glow animation */
-        @keyframes pulseGlow {
-            0% {
-                box-shadow: 
-                    0 0 calc(var(--glow) * 0.8) var(--color1),
-                    0 0 calc(var(--glow) * 1.6) var(--color2);
-            }
-            50% {
-                box-shadow: 
-                    0 0 calc(var(--glow) * 1.2) var(--color1),
-                    0 0 calc(var(--glow) * 2.4) var(--color2);
-            }
-            100% {
-                box-shadow: 
-                    0 0 calc(var(--glow) * 0.8) var(--color1),
-                    0 0 calc(var(--glow) * 1.6) var(--color2);
-            }
         }
         
         .download-container {
@@ -331,27 +310,6 @@
                 font-size: 20px;
                 z-index: 101;
                 box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
-                /* Heartbeat effect */
-                animation: heartbeat 1.5s ease-in-out infinite both;
-            }
-            
-            /* New heartbeat animation */
-            @keyframes heartbeat {
-                0% {
-                    transform: scale(1);
-                }
-                25% {
-                    transform: scale(1.1);
-                }
-                35% {
-                    transform: scale(1);
-                }
-                45% {
-                    transform: scale(1.2);
-                }
-                55% {
-                    transform: scale(1);
-                }
             }
         
             .animation-container {
@@ -524,24 +482,21 @@
             ctx.save();
             ctx.translate(centerX, centerY);
             
-            // Scale particle sizes and positions based on the size parameter
-            const sizeFactor = size / 30; // 30 is the default size
-            
             // Draw vortex particles
             for (let i = 0; i < vortexParticles.length; i++) {
                 const p = vortexParticles[i];
                 
-                // This updates particle position
-                p.angle += p.speed * complexity * 0.1 * speed;
-                p.radius += Math.sin(time * 0.5 + i) * 0.5 * sizeFactor;
+                // Update particle position
+                p.angle += p.speed * complexity * 0.1;
+                p.radius += Math.sin(time * 0.5 + i) * 0.5;
                 
-                // Keep radius within bounds, scaled by size
+                // Keep radius within bounds
                 if (p.radius < 0) p.radius = 0;
                 if (p.radius > size * 5) p.radius = size * 5;
                 
                 // Calculate position
-                const x = Math.cos(p.angle) * p.radius * sizeFactor;
-                const y = Math.sin(p.angle) * p.radius * sizeFactor;
+                const x = Math.cos(p.angle) * p.radius;
+                const y = Math.sin(p.angle) * p.radius;
                 
                 // Color and alpha
                 const colorFactor = (Math.sin(time * 0.3 + p.colorOffset) + 1) / 2;
@@ -552,7 +507,7 @@
                 ctx.fillStyle += `, ${alpha})`.replace('rgb', 'rgba');
                 
                 ctx.beginPath();
-                ctx.arc(x, y, p.size * sizeFactor, 0, Math.PI * 2);
+                ctx.arc(x, y, p.size, 0, Math.PI * 2);
                 ctx.fill();
                 
                 // Draw connection lines to center
@@ -587,7 +542,7 @@
                 
                 // Update crystal rotation
                 crystal.rotation += crystal.rotationSpeed * complexity * 0.1;
-            
+                
                 // Move crystals in gentle motion
                 crystal.x += Math.sin(time * 0.2 + i) * 0.5;
                 crystal.y += Math.cos(time * 0.3 + i * 0.5) * 0.5;
