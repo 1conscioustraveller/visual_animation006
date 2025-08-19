@@ -610,7 +610,7 @@
         function draw() {
             const { color1, color2, patternType, speed, colorSpeed, complexity, size, brightness } = getControls();
             
-            time += 0.01 * speed;
+            time += 0.05 * speed;
             hue = (hue + 0.5 * colorSpeed) % 360;
             
             // Clear with fading effect
