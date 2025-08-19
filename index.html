@@ -592,7 +592,10 @@
                 const crystal = crystals[i];
                 
                 // Update crystal rotation
-                crystal.rotation += crystal.rotationSpeed * complexity * 0.1;
+                // Changed this line:
+                //crystal.rotation += crystal.rotationSpeed * complexity * 0.1;
+                // To:
+                crystal.rotation += crystal.rotationSpeed * speed * (0.1 + complexity * 0.02);
                 
                 // Move crystals in gentle motion
                 crystal.x += Math.sin(time * 0.2 + i) * 0.5;
