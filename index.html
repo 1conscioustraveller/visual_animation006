@@ -487,7 +487,10 @@
                 const p = vortexParticles[i];
                 
                 // Update particle position
-                p.angle += p.speed * complexity * 0.1;
+                
+                //p.angle += p.speed * complexity * 0.1;
+                
+                p.angle += complexity * 0.1;
                 p.radius += Math.sin(time * 0.5 + i) * 0.5;
                 
                 // Keep radius within bounds
